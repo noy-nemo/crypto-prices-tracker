@@ -1,0 +1,11 @@
+{
+  "name": "crypto-tracker",
+  "version": "1.0.0",
+  "description": "Simple single-file cryptocurrency price tracker",
+  "scripts": {
+    "export-csv": "bash scripts/export-to-csv.sh",
+    "postinstall": "bash scripts/postinstall.sh"
+  },
+  "keywords": ["crypto", "tracker"],
+  "license": "MIT"
+}

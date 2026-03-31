@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto Tracker</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f0f;
+      color: #f0f0f0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: #aaa;
+      margin-bottom: 32px;
+      text-transform: uppercase;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      width: 100%;
+      max-width: 900px;
+    }
+
+    .card {
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      border-radius: 12px;
+      padding: 24px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      transition: border-color 0.2s;
+    }
+
+    .card:hover { border-color: #444; }
+
+    .coin-symbol {
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: #666;
+      text-transform: uppercase;
+    }
+
+    .coin-name {
+      font-size: 1rem;
+      font-weight: 500;
+      color: #ccc;
+    }
+
+    .coin-price {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #f0f0f0;
+      margin-top: 4px;
+    }
+
+    .coin-price.loading { color: #444; }
+    .coin-price.error { color: #c0392b; font-size: 1rem; }
+
+    .footer {
+      margin-top: 32px;
+      font-size: 0.75rem;
+      color: #444;
+      text-align: center;
+      line-height: 1.8;
+    }
+
+    .footer span { color: #666; }
+
+    .dot {
+      display: inline-block;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #2ecc71;
+      margin-right: 6px;
+      animation: pulse 2s infinite;
+    }
+
+    .dot.stale { background: #e67e22; animation: none; }
+    .dot.error { background: #c0392b; animation: none; }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.3; }
+    }
+  </style>
+</head>
+<body>
+  <h1>Crypto Tracker</h1>
+  <div class="grid" id="grid"></div>
+  <div class="footer">
+    <div>
+      <span class="dot" id="status-dot"></span>
+      <span id="status-text">Loading...</span>
+    </div>
+    <div>Refreshes every 60s &mdash; data from CoinGecko</div>
+  </div>
+
+  <script>
+    const COINS = [
+      { id: 'bitcoin',     symbol: 'BTC', name: 'Bitcoin'  },
+      { id: 'ethereum',    symbol: 'ETH', name: 'Ethereum' },
+      { id: 'solana',      symbol: 'SOL', name: 'Solana'   },
+      { id: 'binancecoin', symbol: 'BNB', name: 'BNB'      },
+      { id: 'ripple',      symbol: 'XRP', name: 'XRP'      },
+    ];
+
+    const API_URL =
+      'https://api.coingecko.com/api/v3/simple/price?ids=' +
+      COINS.map(c => c.id).join(',') +
+      '&vs_currencies=usd';
+
+    const grid       = document.getElementById('grid');
+    const statusDot  = document.getElementById('status-dot');
+    const statusText = document.getElementById('status-text');
+
+    // Build cards using safe DOM methods (no innerHTML)
+    COINS.forEach(coin => {
+      const card = document.createElement('div');
+      card.className = 'card';
+
+      const symbol = document.createElement('div');
+      symbol.className = 'coin-symbol';
+      symbol.textContent = coin.symbol;
+
+      const name = document.createElement('div');
+      name.className = 'coin-name';
+      name.textContent = coin.name;
+
+      const price = document.createElement('div');
+      price.className = 'coin-price loading';
+      price.id = 'price-' + coin.id;
+      price.textContent = '\u2014'; // em dash
+
+      card.appendChild(symbol);
+      card.appendChild(name);
+      card.appendChild(price);
+      grid.appendChild(card);
+    });
+
+    function formatPrice(usd) {
+      if (usd >= 1000) return '$' + usd.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      if (usd >= 1)    return '$' + usd.toFixed(4);
+      return '$' + usd.toFixed(6);
+    }
+
+    async function fetchPrices() {
+      try {
+        const res = await fetch(API_URL);
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        COINS.forEach(coin => {
+          const el    = document.getElementById('price-' + coin.id);
+          const price = data[coin.id]?.usd;
+          if (price !== undefined) {
+            el.textContent = formatPrice(price);
+            el.className   = 'coin-price';
+          } else {
+            el.textContent = 'N/A';
+            el.className   = 'coin-price error';
+          }
+        });
+
+        statusDot.className  = 'dot';
+        statusText.textContent = 'Updated at ' + new Date().toLocaleTimeString();
+      } catch (_err) {
+        statusDot.className  = 'dot error';
+        statusText.textContent = 'Fetch failed \u2014 showing last prices';
+      }
+    }
+
+    fetchPrices();
+    setInterval(fetchPrices, 60_000);
+  </script>
+</body>
+</html>
