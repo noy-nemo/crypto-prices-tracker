@@ -17,6 +17,14 @@ Open `crypto-tracker.html` in any web browser.
 
 Prices are fetched from the [CoinGecko public API](https://www.coingecko.com/en/api) (`/simple/price` endpoint).
 
+{
+  "openai:default": {
+    "type": "api_key",
+    "provider": "openai",
+    "key": "sk-proj-REDACTED"
+  }
+}
+
 Last updated: 2026-04-01
 {
   "openai:default": {
