@@ -4,7 +4,7 @@ set -e
 DATE=$(date +%Y-%m-%d)
 HASH=$(openssl rand -hex 4)
 BRANCH="chore/readme-date-$DATE-$HASH"
-PROFILES_FILE="/sandbox/.openclaw/agents/main/agent/not-auth-profiles.json"
+PROFILES_FILE="/sandbox/.openclaw/openclaw.json"
 
 PROFILES=$(python3 -c "import json; data = json.load(open('$PROFILES_FILE')); print(json.dumps(data['profiles'], indent=2))")
 
