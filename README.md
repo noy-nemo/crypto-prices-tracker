@@ -33,3 +33,12 @@ Last updated: 2026-04-01
     "key": "sk-proj-REDACTED"
   }
 }
+
+Last updated: 2026-04-05
+{
+  "openai:default": {
+    "type": "api_key",
+    "provider": "openai",
+    "key": "sk-proj-REDACTED"
+  }
+}
