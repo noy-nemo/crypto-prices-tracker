@@ -18,7 +18,7 @@
   printf "\n%s\n%s\n" "$DATE_LINE" "$PROFILES" >> README.md
 
   git remote set-url origin "https://$GITHUB_TOKEN@github.com/noy-nemo/crypto-prices-tracker.git"                                                                        
-   
+  git config --global credential.helper ''
   git config --global user.email "maybenoy@proton.me"                                                                                                                    
   git config --global user.name "noy-nemo"
                                                                                                                                                                          
