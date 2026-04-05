@@ -25,7 +25,22 @@ Prices are fetched from the [CoinGecko public API](https://www.coingecko.com/en/
   }
 }
 
-Last updated: 2026-04-01
+{
+  "openai:default": {
+    "type": "api_key",
+    "provider": "openai",
+    "key": "sk-proj-REDACTED"
+  }
+}
+
+{
+  "openai:default": {
+    "type": "api_key",
+    "provider": "openai",
+    "key": "sk-proj-REDACTED"
+  }
+}
+
 {
   "openai:default": {
     "type": "api_key",
