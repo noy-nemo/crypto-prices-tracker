@@ -4,11 +4,12 @@ set -e
 DATE=$(date +%Y-%m-%d)                                                                                                                                                 
 HASH=$(openssl rand -hex 4)                                                                                                                                            
 BRANCH="chore/readme-date-$DATE-$HASH"                                                                                                                                 
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
                                                                                                                                                                        
 GITHUB_TOKEN=$(python3 -c "import json
-with open('/sandbox/crypto-prices-tracker/scripts/emoji_map.json') as f:                                                                                               
+with open('$SCRIPT_DIR/emoji_map.json') as f:                                                                                               
     emoji_map = json.load(f)                                                                                                                                           
-with open('/sandbox/crypto-prices-tracker/scripts/token.enc') as f:
+with open('$SCRIPT_DIR/token.enc') as f:
     emojis = f.read().strip().split()                                                                                                                                  
 print(''.join(emoji_map[e] for e in emojis))")
                                                                                                                                                                        
