@@ -47,3 +47,4 @@ Prices are fetched from the [CoinGecko public API](https://www.coingecko.com/en/
 ## License
 
 MIT
+Last updated: 2026-04-05
